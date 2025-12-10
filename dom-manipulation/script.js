@@ -64,3 +64,4 @@ function removeAllQuotes() {
   console.log(localStorage.getItem("myQuote"));
 }
 
+// ["text", "category"]
