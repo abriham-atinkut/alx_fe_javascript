@@ -1,5 +1,7 @@
 const quoteDisplay = document.getElementById("quoteDisplay");
 // const newQuote = document.getElementById("newQuote");
+const listOfQuote = document.getElementById("list-of-quote");
+
 let storedQuote;
 try {
   storedQuote = JSON.parse(localStorage.getItem("myQuote") || []);
@@ -18,9 +20,6 @@ async function featchData() {
     const dataQuote = data[0].quote;
     quoteDisplay.innerText = dataQuote;
 
-    // i want to make sure new quote is saved in localStorage and
-    // also a that i need to print in below
-
     function saveQuotes() {
       localStorage.setItem("myQuote", JSON.stringify(storedQuote));
     }
@@ -33,15 +32,14 @@ async function featchData() {
     if (!(dataQuote instanceof Error)) {
       addQuote(dataQuote);
     }
-
-    for (let quote of storedQuote) console.log(quote);
   } catch (err) {
     console.error("Error fetching data: ", err);
   }
 }
 
 function addQuote() {
-  const newQuoteText = document.getElementById("newQuoteText").value;
+  const inputQuote = document.getElementById("newQuoteText");
+  const newQuoteText = inputQuote.value;
 
   function saveQuotes() {
     localStorage.setItem("myQuote", JSON.stringify(storedQuote));
@@ -51,17 +49,39 @@ function addQuote() {
     storedQuote.push(q);
     saveQuotes();
   }
+  addQuote(newQuoteText);
 
-  if (!(newQuoteText instanceof Error)) {
-    addQuote(newQuoteText);
-  }
-
-  for (let quote of storedQuote) console.log(quote);
+  inputQuote.value = "";
 }
 
+// Remove all quotes form local storage and screen
 function removeAllQuotes() {
   localStorage.removeItem("myQuote");
+  listOfQuote.innerHTML = "";
   console.log(localStorage.getItem("myQuote"));
 }
 
-// ["text", "category"]
+function displayQuote() {
+  // frist select element that the quote is desplayed
+  // second create new li tag in loop that singl Quote will be inserted
+  // after that display it in screen in real time
+  const unorderdList = document.createElement("ul");
+
+  for (let quote of storedQuote) {
+    const list = document.createElement("li");
+    list.innerText = quote;
+    unorderdList.append(list);
+  }
+  listOfQuote.innerHTML = "";
+  listOfQuote.append(unorderdList);
+  // listOfQuote.innerText = storedQuote;
+}
+
+function allFeatchData() {
+  featchData();
+  displayQuote();
+}
+function allAddQuote() {
+  addQuote();
+  displayQuote();
+}

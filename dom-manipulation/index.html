@@ -7,8 +7,9 @@
   </head>
   <body>
     <h1>Dynamic Quote Generator</h1>
-    <div id="quoteDisplay"></div> <br>
-    <button onclick="featchData()" id="newQuote">Show New Quote</button>
+    <div id="quoteDisplay"></div>
+    <br />
+    <button onclick="allFeatchData()" id="newQuote">Show New Quote</button>
     <br /><br />
     <div>
       <input
@@ -31,6 +32,9 @@
 
       <button onclick="removeAllQuotes()">Remove All Quotes</button>
     </div>
+
+    <!-- pervious quouts displayed in here -->
+    <div id="list-of-quote"></div>
 
     <script src="script.js"></script>
   </body>
