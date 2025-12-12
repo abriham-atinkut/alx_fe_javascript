@@ -12,8 +12,9 @@ try {
 // ["text", "category"]
 // showRandomQuote 
 // Math.random 
+// addEventListener
 // createAddQuoteForm
-// for i'm skiping it 
+// for now i'm skiping it 
 
 async function featchData() {
   try {
