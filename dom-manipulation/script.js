@@ -11,7 +11,8 @@ try {
 // i'm give the some option to add category  
 // ["text", "category"]
 // showRandomQuote 
-// Math.random
+// Math.random 
+// createAddQuoteForm
 // for i'm skiping it 
 
 async function featchData() {
