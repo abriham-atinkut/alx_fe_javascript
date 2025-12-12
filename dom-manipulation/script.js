@@ -76,7 +76,7 @@ function displayQuote() {
   for (let quote of storedQuote) {
     const list = document.createElement("li");
     list.innerText = quote;
-    unorderdList.append(list);
+    unorderdList.appendChild(list);
   }
   listOfQuote.innerHTML = "";
   listOfQuote.append(unorderdList);
