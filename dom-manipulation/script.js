@@ -10,6 +10,7 @@ try {
 }
 // i'm give the some option to add category  
 // ["text", "category"]
+// showRandomQuote 
 // for i'm skiping it 
 
 async function featchData() {
