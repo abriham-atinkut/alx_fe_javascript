@@ -1,94 +1,101 @@
+// =======================
+// State & Initialization
+// =======================
 const quoteDisplay = document.getElementById("quoteDisplay");
-// const newQuote = document.getElementById("newQuote");
 const listOfQuote = document.getElementById("list-of-quote");
+const newQuoteBtn = document.getElementById("newQuote");
 
-let storedQuote;
-try {
-  storedQuote = JSON.parse(localStorage.getItem("myQuote") || []);
-} catch (e) {
-  storedQuote = [];
-}
-// i'm give the some option to add category  
-// ["text", "category"]
-// showRandomQuote 
-// Math.random 
-// addEventListener
-// createAddQuoteForm
-// for now i'm skiping it 
+let quotes = loadQuotes();
 
-async function featchData() {
+// =======================
+// Utilities
+// =======================
+function loadQuotes() {
   try {
-    const response = await fetch("https://dummyjson.com/quotes/random/1");
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const data = await response.json();
-    const dataQuote = data[0].quote;
-    quoteDisplay.innerText = dataQuote;
-
-    function saveQuotes() {
-      localStorage.setItem("myQuote", JSON.stringify(storedQuote));
-    }
-
-    function addQuote(q) {
-      storedQuote.push(q);
-      saveQuotes();
-    }
-
-    if (!(dataQuote instanceof Error)) {
-      addQuote(dataQuote);
-    }
-  } catch (err) {
-    console.error("Error fetching data: ", err);
+    return JSON.parse(localStorage.getItem("myQuote")) || [];
+  } catch {
+    return [];
   }
 }
 
+function saveQuotes() {
+  localStorage.setItem("myQuote", JSON.stringify(quotes));
+}
+
+// =======================
+// Quote Display
+// =======================
+function showRandomQuote() {
+  if (quotes.length === 0) {
+    quoteDisplay.textContent = "No quotes available.";
+    return;
+  }
+
+  const randomIndex = Math.floor(Math.random() * quotes.length);
+  const quote = quotes[randomIndex];
+
+  quoteDisplay.textContent = `"${quote.text}" — (${quote.category})`;
+}
+
+// =======================
+// Add Quote (Dynamic)
+// =======================
 function addQuote() {
-  const inputQuote = document.getElementById("newQuoteText");
-  const newQuoteText = inputQuote.value;
+  const textInput = document.getElementById("newQuoteText");
+  const categoryInput = document.getElementById("newQuoteCategory");
 
-  function saveQuotes() {
-    localStorage.setItem("myQuote", JSON.stringify(storedQuote));
+  const text = textInput.value.trim();
+  const category = categoryInput.value.trim();
+
+  if (!text || !category) {
+    alert("Both quote text and category are required.");
+    return;
   }
 
-  function addQuote(q) {
-    storedQuote.push(q);
-    saveQuotes();
-  }
-  addQuote(newQuoteText);
+  const newQuote = {
+    text,
+    category,
+  };
 
-  inputQuote.value = "";
+  quotes.push(newQuote);
+  saveQuotes();
+  displayAllQuotes();
+
+  textInput.value = "";
+  categoryInput.value = "";
 }
 
-// Remove all quotes form local storage and screen
+// =======================
+// Display All Quotes
+// =======================
+function displayAllQuotes() {
+  listOfQuote.innerHTML = "";
+
+  const ul = document.createElement("ul");
+
+  quotes.forEach((quote) => {
+    const li = document.createElement("li");
+    li.textContent = `"${quote.text}" — ${quote.category}`;
+    ul.appendChild(li);
+  });
+
+  listOfQuote.appendChild(ul);
+}
+
+// =======================
+// Remove All Quotes
+// =======================
 function removeAllQuotes() {
-  localStorage.removeItem("myQuote");
+  quotes = [];
+  saveQuotes();
   listOfQuote.innerHTML = "";
-  console.log(localStorage.getItem("myQuote"));
+  quoteDisplay.textContent = "";
 }
 
-function displayQuote() {
-  // frist select element that the quote is desplayed
-  // second create new li tag in loop that singl Quote will be inserted
-  // after that display it in screen in real time
-  const unorderdList = document.createElement("ul");
+// =======================
+// Event Listeners
+// =======================
+newQuoteBtn.addEventListener("click", showRandomQuote);
 
-  for (let quote of storedQuote) {
-    const list = document.createElement("li");
-    list.innerText = quote;
-    unorderdList.appendChild(list);
-  }
-  listOfQuote.innerHTML = "";
-  listOfQuote.append(unorderdList);
-  // listOfQuote.innerText = storedQuote;
-}
-
-function allFeatchData() {
-  featchData();
-  displayQuote();
-}
-function allAddQuote() {
-  addQuote();
-  displayQuote();
-}
+// Initial render
+displayAllQuotes();
