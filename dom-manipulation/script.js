@@ -278,7 +278,7 @@ function notifySync(conflictResolved) {
     status.textContent =
       "Server sync completed. Conflicts were resolved using server data.";
   } else {
-    status.textContent = "Server sync completed. No conflicts detected.";
+    status.textContent = "Quotes synced with server!";
   }
 
   setTimeout(() => (status.textContent = ""), 5000);
