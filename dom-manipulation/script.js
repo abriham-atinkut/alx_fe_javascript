@@ -74,15 +74,16 @@ function addQuote() {
     return;
   }
 
-  const newQuote = { text, category };
-
-  quotes.push(newQuote);
+  quotes.push({ text, category });
   saveQuotes();
-  displayAllQuotes();
+
+  populateCategories();
+  filterQuotes();
 
   textInput.value = "";
   categoryInput.value = "";
 }
+
 
 // =======================
 // Display All Quotes
@@ -169,5 +170,63 @@ function importFromJsonFile(event) {
 // =======================
 newQuoteBtn.addEventListener("click", showRandomQuote);
 
+const FILTER_KEY = "selectedCategory";
+function populateCategories() {
+  const select = document.getElementById("categoryFilter");
+
+  // Clear existing options (keep "All")
+  select.innerHTML = `<option value="all">All Categories</option>`;
+
+  const categories = [...new Set(quotes.map((q) => q.category))];
+
+  categories.forEach((category) => {
+    const option = document.createElement("option");
+    option.value = category;
+    option.textContent = category;
+    select.appendChild(option);
+  });
+
+  // Restore saved filter
+  const savedFilter = localStorage.getItem(FILTER_KEY);
+  if (savedFilter) {
+    select.value = savedFilter;
+  }
+}
+
+function filterQuotes() {
+  const selectedCategory = document.getElementById("categoryFilter").value;
+  localStorage.setItem(FILTER_KEY, selectedCategory);
+
+  let filteredQuotes =
+    selectedCategory === "all"
+      ? quotes
+      : quotes.filter((q) => q.category === selectedCategory);
+
+  renderFilteredQuotes(filteredQuotes);
+}
+function renderFilteredQuotes(filteredQuotes) {
+  listOfQuote.innerHTML = "";
+
+  if (filteredQuotes.length === 0) {
+    listOfQuote.textContent = "No quotes in this category.";
+    return;
+  }
+
+  const ul = document.createElement("ul");
+
+  filteredQuotes.forEach((quote) => {
+    const li = document.createElement("li");
+    li.textContent = `"${quote.text}" — ${quote.category}`;
+    ul.appendChild(li);
+  });
+
+  listOfQuote.appendChild(ul);
+}
+
+
+
 // Initial render
 displayAllQuotes();
+populateCategories();
+filterQuotes();
+
