@@ -70,13 +70,18 @@ function addQuote() {
   const category = categoryInput.value.trim();
 
   if (!text || !category) {
-    alert("Both quote text and category are required.");
+    alert("Both fields required");
     return;
   }
 
-  quotes.push({ text, category });
-  saveQuotes();
+  quotes.push({
+    id: Date.now(),
+    text,
+    category,
+    updatedAt: Date.now()
+  });
 
+  saveQuotes();
   populateCategories();
   filterQuotes();
 
@@ -224,6 +229,62 @@ function renderFilteredQuotes(filteredQuotes) {
 }
 
 
+
+const SERVER_API = "https://jsonplaceholder.typicode.com/posts";
+
+
+async function fetchServerQuotes() {
+  const response = await fetch(SERVER_API);
+  const data = await response.json();
+
+  return data.slice(0, 5).map(item => ({
+    id: item.id,
+    text: item.title,
+    category: item.body.substring(0, 20),
+    updatedAt: Date.now()
+  }));
+}
+
+async function syncWithServer() {
+  try {
+    const serverQuotes = await fetchServerQuotes();
+    let conflictsResolved = false;
+
+    serverQuotes.forEach(serverQuote => {
+      const localIndex = quotes.findIndex(q => q.id === serverQuote.id);
+
+      if (localIndex === -1) {
+        quotes.push(serverQuote);
+      } else {
+        // Conflict resolution: server takes precedence
+        quotes[localIndex] = serverQuote;
+        conflictsResolved = true;
+      }
+    });
+
+    saveQuotes();
+    populateCategories();
+    filterQuotes();
+
+    notifySync(conflictsResolved);
+  } catch (error) {
+    console.error("Sync failed:", error);
+  }
+}
+function notifySync(conflictResolved) {
+  const status = document.getElementById("syncStatus");
+
+  if (conflictResolved) {
+    status.textContent =
+      "Server sync completed. Conflicts were resolved using server data.";
+  } else {
+    status.textContent = "Server sync completed. No conflicts detected.";
+  }
+
+  setTimeout(() => (status.textContent = ""), 5000);
+}
+// Sync every 30 seconds
+setInterval(syncWithServer, 30000);
 
 // Initial render
 displayAllQuotes();
