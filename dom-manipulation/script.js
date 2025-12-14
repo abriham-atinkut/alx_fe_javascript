@@ -233,21 +233,21 @@ function renderFilteredQuotes(filteredQuotes) {
 const SERVER_API = "https://jsonplaceholder.typicode.com/posts";
 
 
-async function fetchServerQuotes() {
+async function fetchQuotesFromServer() {
   const response = await fetch(SERVER_API);
   const data = await response.json();
 
-  return data.slice(0, 5).map(item => ({
+  return data.slice(0, 5).map((item) => ({
     id: item.id,
     text: item.title,
     category: item.body.substring(0, 20),
-    updatedAt: Date.now()
+    updatedAt: Date.now(),
   }));
 }
 
 async function syncWithServer() {
   try {
-    const serverQuotes = await fetchServerQuotes();
+    const serverQuotes = await fetchQuotesFromServer();
     let conflictsResolved = false;
 
     serverQuotes.forEach(serverQuote => {
