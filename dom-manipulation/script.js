@@ -291,3 +291,4 @@ displayAllQuotes();
 populateCategories();
 filterQuotes();
 
+// I'll add method", "POST", "headers", "Content-Type"
