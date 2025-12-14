@@ -245,13 +245,13 @@ async function fetchQuotesFromServer() {
   }));
 }
 
-async function syncWithServer() {
+async function syncQuotes() {
   try {
     const serverQuotes = await fetchQuotesFromServer();
     let conflictsResolved = false;
 
-    serverQuotes.forEach(serverQuote => {
-      const localIndex = quotes.findIndex(q => q.id === serverQuote.id);
+    serverQuotes.forEach((serverQuote) => {
+      const localIndex = quotes.findIndex((q) => q.id === serverQuote.id);
 
       if (localIndex === -1) {
         quotes.push(serverQuote);
@@ -284,7 +284,7 @@ function notifySync(conflictResolved) {
   setTimeout(() => (status.textContent = ""), 5000);
 }
 // Sync every 30 seconds
-setInterval(syncWithServer, 30000);
+setInterval(syncQuotes, 30000);
 
 // Initial render
 displayAllQuotes();
@@ -292,3 +292,5 @@ populateCategories();
 filterQuotes();
 
 // I'll add method", "POST", "headers", "Content-Type" syncQuote
+
+
