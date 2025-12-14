@@ -291,6 +291,12 @@ displayAllQuotes();
 populateCategories();
 filterQuotes();
 
+// // // // //
+// Comment 
+// // // // //
+
 // I'll add method", "POST", "headers", "Content-Type" syncQuote
+
+// createAddQuoteForm
 
 
