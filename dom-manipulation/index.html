@@ -32,6 +32,18 @@
 
       <button onclick="removeAllQuotes()">Remove All Quotes</button>
     </div>
+    <br /><br />
+
+    <button onclick="exportQuotes()">Export Quotes (JSON)</button>
+
+    <br /><br />
+
+    <input
+      type="file"
+      id="importFile"
+      accept=".json"
+      onchange="importFromJsonFile(event)"
+    />
 
     <!-- pervious quouts displayed in here -->
     <div id="list-of-quote"></div>
